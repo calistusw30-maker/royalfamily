@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Deriv Website</title>
+  <style>
+    body{
+      background:#111827;
+      color:white;
+      font-family:Arial,sans-serif;
+      text-align:center;
+      padding:40px;
+    }
+    button{
+      background:#2563eb;
+      color:white;
+      border:none;
+      padding:14px 22px;
+      border-radius:10px;
+      font-size:18px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>My First Deriv Website</h1>
+  <p>Secure Deriv Login with PKCE</p>
+
+  <button id="loginBtn">Login with Deriv</button>
+
+  <script>
+    async function loginDeriv() {
+
+      // Replace with your real Deriv App ID later
+      const appId = '12345';
+
+      // Replace with your real GitHub Pages URL later
+      const redirectUri = 'https://calistusw30-maker.github.io/royalfamily/';
+
+      // 1. Generate code_verifier
+      const array = crypto.getRandomValues(new Uint8Array(64));
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+      const codeVerifier = Array.from(array)
+        .map(v => chars[v % chars.length])
+        .join('');
+
+      // 2. Create SHA-256 hash
+      const hashBuffer = await crypto.subtle.digest(
+        'SHA-256',
+        new TextEncoder().encode(codeVerifier)
+      );
+
+      // 3. Convert hash to base64url
+      const codeChallenge = btoa(
+        String.fromCharCode(...new Uint8Array(hashBuffer))
+      )
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+
+      // 4. Generate state
+      const stateArray = crypto.getRandomValues(new Uint8Array(16));
+      const state = Array.from(stateArray)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+
+      // 5. Store values
+      sessionStorage.setItem('pkce_code_verifier', codeVerifier);
+      sessionStorage.setItem('oauth_state', state);
+
+      // 6. Build Deriv OAuth URL
+      const authUrl =
+        'https://oauth.deriv.com/oauth2/authorize' +
+        '?app_id=' + appId +
+        '&l=EN' +
+        '&redirect_uri=' + encodeURIComponent(redirectUri) +
+        '&response_type=code' +
+        '&code_challenge=' + codeChallenge +
+        '&code_challenge_method=S256' +
+        '&state=' + state;
+
+      // 7. Redirect to Deriv login
+      window.location.href = authUrl;
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', loginDeriv);
+  </script>
+
+</body>
+</html>
