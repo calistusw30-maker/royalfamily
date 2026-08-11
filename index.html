@@ -85,6 +85,18 @@ window.location.href = authUrl;
     }
 
     document.getElementById('loginBtn').addEventListener('click', loginDeriv);
+    // Check if Deriv returned an authorization code
+const params = new URLSearchParams(window.location.search);
+
+if (params.get('code')) {
+  document.body.innerHTML = `
+    <div style="color:white;text-align:center;padding:40px;font-family:Arial;">
+      <h1>✅ Login Successful</h1>
+      <p>Deriv has authorized your website.</p>
+      <p>Authorization code received.</p>
+    </div>
+  `;
+}
   </script>
 
 </body>
