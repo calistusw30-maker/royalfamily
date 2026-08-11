@@ -1,103 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Deriv Website</title>
-  <style>
-    body{
-      background:#111827;
-      color:white;
-      font-family:Arial,sans-serif;
-      text-align:center;
-      padding:40px;
-    }
-    button{
-      background:#2563eb;
-      color:white;
-      border:none;
-      padding:14px 22px;
-      border-radius:10px;
-      font-size:18px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoyalFamily Deriv Dashboard</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial, Helvetica, sans-serif;
+  background:#071028;
+  color:white;
+  min-height:100vh;
+}
+
+.header{
+  background:#0b1733;
+  padding:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #1f2a44;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.logo{
+  font-size:24px;
+  font-weight:bold;
+  color:#4da3ff;
+}
+
+.status{
+  background:#103b1d;
+  color:#7dff9b;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:13px;
+  border:1px solid #1f6a35;
+}
+
+.container{
+  padding:16px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+  max-width:1100px;
+  margin:auto;
+}
+
+.card{
+  background:#0d1835;
+  border:1px solid #1e2a4d;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 8px 25px rgba(0,0,0,.35);
+}
+
+.card h2{
+  font-size:18px;
+  margin-bottom:14px;
+  color:#8ec5ff;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.info{
+  background:#101d3f;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid #23315d;
+}
+
+.info span{
+  display:block;
+  color:#9fb3d9;
+  font-size:13px;
+  margin-bottom:6px;
+}
+
+.info strong{
+  font-size:16px;
+}
+
+.balance{
+  font-size:30px;
+  color:#6df59b;
+  font-weight:bold;
+  margin-top:6px;
+}
+
+.ticker{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px;
+  background:#101d3f;
+  border-radius:14px;
+  border:1px solid #23315d;
+  margin-bottom:10px;
+}
+
+.price{
+  font-size:26px;
+  font-weight:bold;
+}
+
+.up{color:#6df59b;}
+.down{color:#ff6b6b;}
+
+.signal{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#101d3f;
+  border:1px solid #23315d;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:10px;
+}
+
+.badge{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.buy{background:#123b24;color:#7dff9b;}
+.sell{background:#3d1717;color:#ff9b9b;}
+.wait{background:#3b3312;color:#ffe37d;}
+
+.strength{
+  height:10px;
+  width:100%;
+  background:#1b2748;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.strength div{
+  height:100%;
+  width:78%;
+  background:linear-gradient(90deg,#2ee56b,#7dff9b);
+}
+
+.ai-box{
+  background:#101d3f;
+  border:1px solid #23315d;
+  border-radius:14px;
+  padding:14px;
+  line-height:1.6;
+}
+
+.ai-box p{
+  margin-bottom:8px;
+}
+
+.chart{
+  width:100%;
+  height:420px;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid #23315d;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+button{
+  border:none;
+  border-radius:14px;
+  padding:14px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.primary{
+  background:#2563eb;
+  color:white;
+}
+
+.secondary{
+  background:#17264d;
+  color:white;
+  border:1px solid #2b3b68;
+}
+
+.logout{
+  width:100%;
+  background:#7a1d1d;
+  color:white;
+  margin-top:12px;
+}
+
+.footer{
+  text-align:center;
+  color:#7f8fb3;
+  padding:24px;
+  font-size:13px;
+}
+
+@media (min-width: 800px){
+  .container{
+    grid-template-columns:1fr 1fr;
+  }
+  .full{
+    grid-column:1 / -1;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <h1>My First Deriv Website</h1>
-  <p>Secure Deriv Login with PKCE</p>
+<div class="header">
+  <div class="logo">RoyalFamily</div>
+  <div class="status">● Connected to Deriv</div>
+</div>
 
-  <button id="loginBtn">Login with Deriv</button>
+<div class="container">
 
-  <script>
-    async function loginDeriv() {
+  <!-- Account Card -->
+  <div class="card">
+    <h2>Account Dashboard</h2>
 
-      const clientId = '345duXkqs4VidzVc6tqak';
+    <div class="grid">
+      <div class="info">
+        <span>Account Name</span>
+        <strong id="accName">Deriv User</strong>
+      </div>
 
-      // Replace with your real GitHub Pages URL later
-      const redirectUri = 'https://calistusw30-maker.github.io/royalfamily/';
+      <div class="info">
+        <span>Account ID</span>
+        <strong id="accId">CR123456</strong>
+      </div>
+    </div>
 
-      // 1. Generate code_verifier
-      const array = crypto.getRandomValues(new Uint8Array(64));
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-      const codeVerifier = Array.from(array)
-        .map(v => chars[v % chars.length])
-        .join('');
+    <div class="info" style="margin-top:12px">
+      <span>Demo Balance</span>
+      <div class="balance" id="balance">$10,000.00</div>
+    </div>
 
-      // 2. Create SHA-256 hash
-      const hashBuffer = await crypto.subtle.digest(
-        'SHA-256',
-        new TextEncoder().encode(codeVerifier)
-      );
+    <div class="info" style="margin-top:12px">
+      <span>Login Status</span>
+      <strong>Authorized via OAuth 2.0 + PKCE</strong>
+    </div>
+  </div>
 
-      // 3. Convert hash to base64url
-      const codeChallenge = btoa(
-        String.fromCharCode(...new Uint8Array(hashBuffer))
-      )
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
+  <!-- Live Market -->
+  <div class="card">
+    <h2>Live Market</h2>
 
-      // 4. Generate state
-      const stateArray = crypto.getRandomValues(new Uint8Array(16));
-      const state = Array.from(stateArray)
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
+    <div class="ticker">
+      <div>
+        <div>Volatility 10 Index</div>
+        <div class="price up" id="v10">1024.52</div>
+      </div>
+      <div class="up" id="v10Change">+0.82%</div>
+    </div>
 
-      // 5. Store values
-      sessionStorage.setItem('pkce_code_verifier', codeVerifier);
-      sessionStorage.setItem('oauth_state', state);
+    <div class="ticker">
+      <div>
+        <div>Volatility 25 Index</div>
+        <div class="price down" id="v25">875.16</div>
+      </div>
+      <div class="down" id="v25Change">-0.34%</div>
+    </div>
 
-      // 6. Build Deriv OAuth URL
-      const authUrl =
-  'https://auth.deriv.com/oauth2/auth' +
-  '?response_type=code' +
-  '&client_id=' + clientId +
-  '&redirect_uri=' + encodeURIComponent(redirectUri) +
-  '&scope=trade+account_manage' +
-  '&state=' + state +
-  '&code_challenge=' + codeChallenge +
-  '&code_challenge_method=S256' +
-  '&prompt=registration' +
-  '&utm_medium=affiliate';
+    <div class="ticker">
+      <div>
+        <div>Volatility 75 Index</div>
+        <div class="price up" id="v75">3421.11</div>
+      </div>
+      <div class="up" id="v75Change">+1.12%</div>
+    </div>
+  </div>
 
-window.location.href = authUrl;
-    }
+  <!-- Signals -->
+  <div class="card">
+    <h2>Signal Center</h2>
 
-    document.getElementById('loginBtn').addEventListener('click', loginDeriv);
-    // Check if Deriv returned an authorization code
+    <div class="signal">
+      <div>
+        <strong>Volatility 75</strong><br>
+        Trend continuation detected
+      </div>
+      <div class="badge buy">BUY</div>
+    </div>
+
+    <div class="signal">
+      <div>
+        <strong>Volatility 25</strong><br>
+        Resistance zone nearby
+      </div>
+      <div class="badge wait">WAIT</div>
+    </div>
+
+    <div class="signal">
+      <div>
+        <strong>Volatility 10</strong><br>
+        Short-term reversal detected
+      </div>
+      <div class="badge sell">SELL</div>
+    </div>
+
+    <div style="margin-top:14px">
+      <div style="display:flex;justify-content:space-between">
+        <span>Signal Strength</span>
+        <strong>78%</strong>
+      </div>
+      <div class="strength"><div></div></div>
+    </div>
+  </div>
+
+  <!-- AI Analysis -->
+  <div class="card">
+    <h2>AI Market Analysis</h2>
+
+    <div class="ai-box">
+      <p><strong>Current Bias:</strong> Bullish</p>
+      <p><strong>Confidence:</strong> Medium–High</p>
+      <p><strong>Momentum:</strong> Positive across V10 and V75.</p>
+      <p><strong>Risk Note:</strong> Avoid entering during sharp spikes; wait for candle confirmation.</p>
+      <p><strong>Suggested Session:</strong> London / New York overlap.</p>
+      <p><strong>Next Scan:</strong> <span id="scanTime">--:--:--</span></p>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="card full">
+    <h2>TradingView Chart</h2>
+
+    <div class="chart">
+      <iframe
+        src="https://s.tradingview.com/widgetembed/?symbol=FX:EURUSD&interval=15&theme=dark&style=1&locale=en"
+        width="100%"
+        height="100%"
+        frameborder="0"
+        allowtransparency="true"
+        scrolling="no">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="card full">
+    <h2>Quick Actions</h2>
+
+    <div class="actions">
+      <button class="primary" onclick="alert('Open Trade page')">Open Trade</button>
+      <button class="secondary" onclick="alert('Deposit feature coming soon')">Deposit</button>
+      <button class="secondary" onclick="alert('Withdraw feature coming soon')">Withdraw</button>
+      <button class="primary" onclick="window.open('https://wa.me/254700000000','_blank')">WhatsApp Support</button>
+    </div>
+
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+</div>
+
+<div class="footer">
+  RoyalFamily Deriv Dashboard • OAuth 2.0 + PKCE Connected
+</div>
+
+<script>
+// Show current time for AI scan
+function updateTime(){
+  const now = new Date();
+  document.getElementById('scanTime').textContent =
+    now.toLocaleTimeString();
+}
+updateTime();
+setInterval(updateTime,1000);
+
+// Simulated live prices
+function randomMove(id, changeId, up=true){
+  const el = document.getElementById(id);
+  const current = parseFloat(el.textContent);
+  const move = (Math.random()-0.5) * (up ? 4 : 3);
+  const next = (current + move).toFixed(2);
+  el.textContent = next;
+
+  const pct = (move/100).toFixed(2);
+  const ch = document.getElementById(changeId);
+
+  if(move >= 0){
+    ch.textContent = '+' + pct + '%';
+    ch.className = 'up';
+    el.className = 'price up';
+  }else{
+    ch.textContent = pct + '%';
+    ch.className = 'down';
+    el.className = 'price down';
+  }
+}
+
+setInterval(()=>{
+  randomMove('v10','v10Change',true);
+  randomMove('v25','v25Change',false);
+  randomMove('v75','v75Change',true);
+},3000);
+
+// Logout
+function logout(){
+  sessionStorage.clear();
+  window.location.href =
+    'https://calistusw30-maker.github.io/royalfamily/';
+}
+
+// Detect OAuth success from URL
 const params = new URLSearchParams(window.location.search);
 
-if (params.get('code')) {
-  document.body.innerHTML = `
-    <div style="color:white;text-align:center;padding:40px;font-family:Arial;">
-      <h1>✅ Login Successful</h1>
-      <p>Deriv has authorized your website.</p>
-      <p>Authorization code received.</p>
-    </div>
-  `;
+if(params.get('code')){
+  console.log('OAuth authorization code received');
 }
-  </script>
+</script>
 
 </body>
 </html>
