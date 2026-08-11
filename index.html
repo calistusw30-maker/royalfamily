@@ -389,27 +389,40 @@ function updateTime(){
 updateTime();
 setInterval(updateTime,1000);
 
-// Simulated live prices
-function randomMove(id, changeId, up=true){
-  const el = document.getElementById(id);
-  const current = parseFloat(el.textContent);
-  const move = (Math.random()-0.5) * (up ? 4 : 3);
-  const next = (current + move).toFixed(2);
-  el.textContent = next;
+// ===== Real Deriv WebSocket Live Prices =====
+const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
 
-  const pct = (move/100).toFixed(2);
-  const ch = document.getElementById(changeId);
+ws.onopen = () => {
+  // Subscribe to live ticks
+  ws.send(JSON.stringify({ ticks: 'R_10' }));
+  ws.send(JSON.stringify({ ticks: 'R_25' }));
+  ws.send(JSON.stringify({ ticks: 'R_75' }));
+};
 
-  if(move >= 0){
-    ch.textContent = '+' + pct + '%';
-    ch.className = 'up';
-    el.className = 'price up';
-  }else{
-    ch.textContent = pct + '%';
-    ch.className = 'down';
-    el.className = 'price down';
+ws.onmessage = (msg) => {
+  const data = JSON.parse(msg.data);
+
+  if (data.tick) {
+    const symbol = data.tick.symbol;
+    const quote = Number(data.tick.quote).toFixed(2);
+
+    if (symbol === 'R_10') {
+      document.getElementById('v10').textContent = quote;
+    }
+
+    if (symbol === 'R_25') {
+      document.getElementById('v25').textContent = quote;
+    }
+
+    if (symbol === 'R_75') {
+      document.getElementById('v75').textContent = quote;
+    }
   }
-}
+};
+
+ws.onerror = () => {
+  console.log('Deriv WebSocket connection error');
+};
 
 setInterval(()=>{
   randomMove('v10','v10Change',true);
