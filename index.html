@@ -32,8 +32,7 @@
   <script>
     async function loginDeriv() {
 
-      // Replace with your real Deriv App ID later
-      const appId = '12345';
+      const clientId = '345duXkqs4VidzVc6tqak';
 
       // Replace with your real GitHub Pages URL later
       const redirectUri = 'https://calistusw30-maker.github.io/royalfamily/';
@@ -71,17 +70,18 @@
 
       // 6. Build Deriv OAuth URL
       const authUrl =
-        'https://oauth.deriv.com/oauth2/authorize' +
-        '?app_id=' + appId +
-        '&l=EN' +
-        '&redirect_uri=' + encodeURIComponent(redirectUri) +
-        '&response_type=code' +
-        '&code_challenge=' + codeChallenge +
-        '&code_challenge_method=S256' +
-        '&state=' + state;
+  'https://auth.deriv.com/oauth2/auth' +
+  '?response_type=code' +
+  '&client_id=' + clientId +
+  '&redirect_uri=' + encodeURIComponent(redirectUri) +
+  '&scope=trade+account_manage' +
+  '&state=' + state +
+  '&code_challenge=' + codeChallenge +
+  '&code_challenge_method=S256' +
+  '&prompt=registration' +
+  '&utm_medium=affiliate';
 
-      // 7. Redirect to Deriv login
-      window.location.href = authUrl;
+window.location.href = authUrl;
     }
 
     document.getElementById('loginBtn').addEventListener('click', loginDeriv);
