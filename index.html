@@ -423,11 +423,6 @@ ws.onmessage = (msg) => {
 ws.onerror = () => {
   console.log('Deriv WebSocket connection error');
 };
-
-setInterval(()=>{
-  randomMove('v10','v10Change',true);
-  randomMove('v25','v25Change',false);
-  randomMove('v75','v75Change',true);
 },3000);
 
 // Logout
