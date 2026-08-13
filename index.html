@@ -393,14 +393,13 @@ setInterval(updateTime,1000);
 const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
 
 ws.onopen = () => {
-  document.getElementById('liveStatus').textContent = '●
-    Live Connected';
+  document.getElementById('liveStatus').textContent = '● Live Connected';
   // Subscribe to live ticks
   ws.send(JSON.stringify({ ticks: 'R_10' }));
   ws.send(JSON.stringify({ ticks: 'R_25' }));
   ws.send(JSON.stringify({ ticks: 'R_75' }));
 };
-
+  
 ws.onmessage = (msg) => {
   const data = JSON.parse(msg.data);
 
