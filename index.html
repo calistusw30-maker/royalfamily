@@ -430,9 +430,58 @@ ws.onerror = () => {
 const params = new URLSearchParams(window.location.search);
 
 if (params.get('code')) {
-  document.getElementById('accountName').textContent = 'Authorized User';
-  document.getElementById('accountId').textContent = 'OAuth Connected';
-  document.getElementById('balance').textContent = '$10,000.00 USD';
+  const code = params.get('code');
+
+  // Exchange authorization code for access token
+  fetch('https://api.deriv.com/oauth2/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      grant_type: 'authorization_code',
+      code: code,
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      code_verifier: sessionStorage.getItem('pkce_code_verifier')
+    })
+  })
+  .then(res => res.json())
+  .then(tokenData => {
+    if (!tokenData.access_token) {
+      console.error('Token error', tokenData);
+      return;
+    }
+
+    // Save token
+    localStorage.setItem('deriv_token', tokenData.access_token);
+
+    // Request real account data
+    const api = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
+
+    api.onopen = () => {
+      api.send(JSON.stringify({ authorize: tokenData.access_token }));
+    };
+
+    api.onmessage = (msg) => {
+      const data = JSON.parse(msg.data);
+
+      if (data.authorize) {
+        document.getElementById('accountName').textContent =
+          data.authorize.fullname || 'Deriv User';
+
+        document.getElementById('accountId').textContent =
+          data.authorize.loginid;
+
+        document.getElementById('balance').textContent =
+          data.authorize.currency + ' ' +
+          Number(data.authorize.balance).toFixed(2);
+
+        api.close();
+      }
+    };
+  })
+  .catch(err => console.error('OAuth fetch failed', err));
 }
 // Logout
 function logout(){
