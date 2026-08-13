@@ -426,7 +426,14 @@ ws.onmessage = (msg) => {
 ws.onerror = () => {
   console.log('Deriv WebSocket connection error');
 };
+// Temporary account display after successful OAuth login
+const params = new URLSearchParams(window.location.search);
 
+if (params.get('code')) {
+  document.getElementById('accountName').textContent = 'Authorized User';
+  document.getElementById('accountId').textContent = 'OAuth Connected';
+  document.getElementById('balance').textContent = '$10,000.00 USD';
+}
 // Logout
 function logout(){
   sessionStorage.clear();
@@ -434,12 +441,6 @@ function logout(){
     'https://calistusw30-maker.github.io/royalfamily/';
 }
 
-// Detect OAuth success from URL
-const params = new URLSearchParams(window.location.search);
-
-if(params.get('code')){
-  console.log('OAuth authorization code received');
-}
 </script>
 
 </body>
